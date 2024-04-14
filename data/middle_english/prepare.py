@@ -1,17 +1,21 @@
 import os
-import requests
 import tiktoken
 import numpy as np
+from pathlib import Path
 
-# download the tiny shakespeare dataset
-input_file_path = os.path.join(os.path.dirname(__file__), 'input.txt')
-if not os.path.exists(input_file_path):
-    data_url = 'https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt'
-    with open(input_file_path, 'w', encoding='utf-8') as f:
-        f.write(requests.get(data_url).text)
+# data should be a fat string.
+filepath = input("fileath for dataset: ")
+paths = [str(x) for x in Path(filepath).glob("**/*")]
 
-with open(input_file_path, 'r', encoding='utf-8') as f:
-    data = f.read()
+data = ""
+
+print("loading data...")
+
+for i in range(len(paths)):
+	print("reading " + os.path.basename(paths[i]))
+	with open(paths[i], "r") as f:
+		data = data + "\n" + f.read()
+
 n = len(data)
 train_data = data[:int(n*0.9)] # ttrain on first 90%
 val_data = data[int(n*0.9):] # test on last 10%
